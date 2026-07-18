@@ -14,7 +14,8 @@ import StatusBadge from '../components/StatusBadge';
 import { fetchRevenueRecognition, fetchRevByClient } from '../api';
 import type { RevenueRecord, RevenueByClient } from '../types';
 
-const formatCurrency = (value: number): string => {
+const formatCurrency = (value: number | undefined | null): string => {
+  if (value === undefined || value === null) return 'Rs. 0';
   if (value >= 10000000) return `Rs. ${(value / 10000000).toFixed(1)} Cr`;
   if (value >= 100000) return `Rs. ${(value / 100000).toFixed(1)} L`;
   return `Rs. ${value.toLocaleString('en-IN')}`;
@@ -129,3 +130,5 @@ const Revenue: React.FC = () => {
 };
 
 export default Revenue;
+
+

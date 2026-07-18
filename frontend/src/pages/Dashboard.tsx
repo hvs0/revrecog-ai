@@ -25,7 +25,8 @@ import StatusBadge from '../components/StatusBadge';
 import { fetchDashboard } from '../api';
 import type { DashboardData } from '../types';
 
-const formatCurrency = (value: number): string => {
+const formatCurrency = (value: number | undefined | null): string => {
+  if (value === undefined || value === null) return 'Rs. 0';
   if (value >= 10000000) {
     return `Rs. ${(value / 10000000).toFixed(1)} Cr`;
   }
@@ -35,7 +36,8 @@ const formatCurrency = (value: number): string => {
   return `Rs. ${value.toLocaleString('en-IN')}`;
 };
 
-const formatCurrencyShort = (value: number): string => {
+const formatCurrencyShort = (value: number | undefined | null): string => {
+  if (value === undefined || value === null) return '0';
   if (value >= 10000000) return `${(value / 10000000).toFixed(1)}Cr`;
   if (value >= 100000) return `${(value / 100000).toFixed(1)}L`;
   return value.toLocaleString('en-IN');
