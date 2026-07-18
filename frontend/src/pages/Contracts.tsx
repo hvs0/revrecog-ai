@@ -55,7 +55,7 @@ const Contracts: React.FC = () => {
         </div>
         <div className="flex items-center justify-between px-4 py-6">
           {ASC606_STEPS.map((s, i) => {
-            const count = asc606?.step_distribution.find(d => d.step === s.step)?.count || 0;
+            const count = (asc606?.step_distribution || asc606?.steps || []).find((d: any) => d.step === s.step)?.count || 0;
             return (
               <React.Fragment key={s.step}>
                 <div className="flex flex-col items-center text-center">
