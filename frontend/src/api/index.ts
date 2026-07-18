@@ -212,7 +212,8 @@ export const fetchDashboard = async (): Promise<DashboardData> => {
 export const fetchClients = async (): Promise<Client[]> => {
   try {
     const res = await api.get('/clients');
-    return res.data.clients || res.data;
+    const data = res.data.clients || res.data;
+    return Array.isArray(data) ? data : [];
   } catch {
     return mockClients;
   }
@@ -241,7 +242,8 @@ export const deleteClient = async (id: string): Promise<void> => {
 export const fetchContracts = async (): Promise<Contract[]> => {
   try {
     const res = await api.get('/contracts');
-    return res.data.contracts || res.data;
+    const data = res.data.contracts || res.data;
+    return Array.isArray(data) ? data : [];
   } catch {
     return mockContracts;
   }
@@ -266,7 +268,8 @@ export const fetchAsc606Summary = async (): Promise<Asc606Summary> => {
 export const fetchInvoices = async (): Promise<Invoice[]> => {
   try {
     const res = await api.get('/invoices');
-    return res.data.invoices || res.data;
+    const data = res.data.invoices || res.data;
+    return Array.isArray(data) ? data : [];
   } catch {
     return mockInvoices;
   }
@@ -282,14 +285,15 @@ export const fetchInvoiceSummary = async (): Promise<InvoiceSummary> => {
 };
 
 export const markInvoicePaid = async (id: string): Promise<void> => {
-  await api.put(`/invoices/${id}/mark-paid`);
+  await api.post(`/invoices/${id}/mark-paid`);
 };
 
 // Leakage
 export const fetchLeakageAlerts = async (): Promise<LeakageAlert[]> => {
   try {
-    const res = await api.get('/leakage/alerts');
-    return res.data.alerts || res.data;
+    const res = await api.get('/leakage/');
+    const data = res.data.alerts || res.data;
+    return Array.isArray(data) ? data : [];
   } catch {
     return mockLeakageAlerts;
   }
