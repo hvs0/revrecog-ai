@@ -187,13 +187,21 @@ export const fetchDashboard = async (): Promise<DashboardData> => {
       api.get('/dashboard/billing-breakdown'),
       api.get('/dashboard/alerts-summary'),
     ]);
+    const m = metrics.data;
     return {
-      metrics: metrics.data,
-      monthly_trends: trends.data.trends || trends.data,
+      metrics: {
+        total_contract_value: m.total_contract_value || 0,
+        monthly_revenue: m.monthly_revenue || 0,
+        revenue_leakage: m.open_leakage_amount || m.revenue_leakage || 0,
+        active_clients: m.active_clients || m.total_clients || 0,
+        net_margin_avg: m.net_margin_pct || m.avg_client_margin || m.net_margin_avg || 0,
+        open_alerts: m.open_alerts_count || m.open_alerts || 0,
+      },
+      monthly_trends: trends.data.trends || trends.data || [],
       top_accounts: snapshot.data.top_accounts || [],
       bottom_accounts: snapshot.data.bottom_accounts || [],
-      billing_breakdown: billing.data.breakdown || billing.data,
-      recent_alerts: alerts.data.alerts || alerts.data,
+      billing_breakdown: billing.data.breakdown || billing.data || [],
+      recent_alerts: alerts.data.alerts || alerts.data.recent_alerts || [],
     };
   } catch {
     return mockDashboard;
