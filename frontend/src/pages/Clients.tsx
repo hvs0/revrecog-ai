@@ -45,9 +45,9 @@ const Clients: React.FC = () => {
     finally { setLoading(false); }
   };
 
-  const industries = [...new Set(clients.map(c => c.industry))];
-  const geographies = [...new Set(clients.map(c => c.geography))];
-  const billingModels = [...new Set(clients.map(c => c.billing_model))];
+  const industries = [...new Set(clients.map(c => c.industry).filter(Boolean))];
+  const geographies = [...new Set(clients.map(c => c.geography).filter(Boolean))];
+  const billingModels = [...new Set(clients.map(c => c.billing_model).filter(Boolean))];
 
   const filtered = clients.filter(c => {
     if (search && !c.name.toLowerCase().includes(search.toLowerCase())) return false;

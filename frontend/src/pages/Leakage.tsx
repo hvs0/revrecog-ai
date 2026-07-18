@@ -90,16 +90,16 @@ const Leakage: React.FC = () => {
         <div className="card">
           <h3 className="card-header">Leakage by Type</h3>
           <div className="space-y-4">
-            {summary.by_type.map(item => (
+            {(summary.by_type || []).map((item: any) => (
               <div key={item.type} className="flex items-center gap-4">
                 <div className="w-32 text-sm font-medium text-gray-700">{item.type}</div>
                 <div className="flex-1">
                   <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-red-500 rounded-full transition-all" style={{ width: `${item.percentage}%` }}></div>
+                    <div className="h-full bg-red-500 rounded-full transition-all" style={{ width: `${item.percentage || Math.min((item.count || 0) * 10, 100)}%` }}></div>
                   </div>
                 </div>
-                <div className="w-24 text-sm text-right font-medium">{formatCurrency(item.amount)}</div>
-                <div className="w-12 text-xs text-right text-gray-500">{item.percentage}%</div>
+                <div className="w-24 text-sm text-right font-medium">{formatCurrency(item.amount || 0)}</div>
+                <div className="w-12 text-xs text-right text-gray-500">{item.percentage || item.count || 0}%</div>
               </div>
             ))}
           </div>
@@ -165,15 +165,15 @@ const Leakage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {unbilled.map(item => (
-                <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-25">
-                  <td className="table-cell font-medium">{item.client_name}</td>
-                  <td className="table-cell">{item.description}</td>
-                  <td className="table-cell">{item.hours}h</td>
-                  <td className="table-cell font-semibold">{formatCurrency(item.estimated_value)}</td>
+              {unbilled.map((item: any) => (
+                <tr key={item.client_id || item.id} className="border-b border-gray-50 hover:bg-gray-25">
+                  <td className="table-cell font-medium">{item.client_name || ''}</td>
+                  <td className="table-cell">{item.description || `${item.activity_count || 0} activities`}</td>
+                  <td className="table-cell">{item.hours || item.activity_count || 0}h</td>
+                  <td className="table-cell font-semibold">{formatCurrency(item.total_amount || item.estimated_value || 0)}</td>
                   <td className="table-cell">
-                    <span className={`font-medium ${item.days_unbilled > 25 ? 'text-red-600' : 'text-amber-600'}`}>
-                      {item.days_unbilled} days
+                    <span className={`font-medium ${(item.days_unbilled || 20) > 25 ? 'text-red-600' : 'text-amber-600'}`}>
+                      {item.days_unbilled || '20+'} days
                     </span>
                   </td>
                 </tr>

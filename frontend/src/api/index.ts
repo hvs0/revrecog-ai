@@ -311,7 +311,8 @@ export const fetchLeakageSummary = async (): Promise<LeakageSummary> => {
 export const fetchUnbilledWork = async (): Promise<UnbilledWork[]> => {
   try {
     const res = await api.get('/leakage/unbilled');
-    return res.data.items || res.data;
+    const data = res.data.by_client || res.data.items || res.data;
+    return Array.isArray(data) ? data : [];
   } catch {
     return mockUnbilledWork;
   }
