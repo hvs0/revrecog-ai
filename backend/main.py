@@ -18,16 +18,26 @@ FRONTEND_DIR = Path(__file__).parent.parent / "frontend" / "dist"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: create tables and seed data if DB doesn't exist
-    if not db_exists():
-        print("Database not found. Creating tables and seeding data...")
-        Base.metadata.create_all(bind=engine)
-        from seed_data import generate_seed_data
-        generate_seed_data()
-        print("Database initialized with seed data.")
-    else:
-        Base.metadata.create_all(bind=engine)
-        print("Database loaded successfully.")
+    # Startup: create tables safely (checkfirst handles existing tables)
+    try:
+        from sqlalchemy import inspect
+        inspector = inspect(engine)
+        tables = inspector.get_table_names()
+        if not tables:
+            print("Database empty. Creating tables and seeding data...")
+            Base.metadata.create_all(bind=engine, checkfirst=True)
+            from seed_data import generate_seed_data
+            generate_seed_data()
+            print("Database initialized with seed data.")
+        else:
+            print(f"Database loaded. {len(tables)} tables found.")
+    except Exception as e:
+        print(f"Startup warning: {e}")
+        # Try creating tables anyway with checkfirst
+        try:
+            Base.metadata.create_all(bind=engine, checkfirst=True)
+        except:
+            pass
     yield
     print("Application shutting down.")
 
