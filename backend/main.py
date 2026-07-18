@@ -12,8 +12,9 @@ from database import engine, Base, db_exists
 from routers import dashboard, clients, contracts, invoices, leakage, revenue, admin
 from routers import data_portal
 
-# Path to the built frontend
-FRONTEND_DIR = Path(__file__).parent.parent / "frontend" / "dist"
+# Path to the built frontend - works both locally and on Render
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+print(f"Frontend directory: {FRONTEND_DIR} (exists: {FRONTEND_DIR.exists()})")
 
 
 @asynccontextmanager
